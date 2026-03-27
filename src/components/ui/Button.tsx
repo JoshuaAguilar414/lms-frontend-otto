@@ -9,7 +9,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles = {
   primary: 'bg-[#54bd01] hover:bg-[#4aa801] text-white',
-  secondary: 'bg-white text-[#00263d] hover:bg-gray-50',
+  secondary: 'bg-white text-brand hover:bg-gray-50',
   outline: 'border-2 border-[#54bd01] text-[#54bd01] hover:bg-[#54bd01]/10',
 };
 

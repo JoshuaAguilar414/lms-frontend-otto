@@ -36,7 +36,7 @@ export function UserAvatar({ name, imageUrl, className = '', size = 'md' }: User
 
   return (
     <div
-      className={`flex flex-shrink-0 items-center justify-center rounded-full bg-[#54bd01] font-semibold text-white ${sizeClass} ${className}`}
+      className={`flex flex-shrink-0 items-center justify-center rounded-full bg-otto-burgundy font-semibold text-white ${sizeClass} ${className}`}
       style={{ textShadow: '0 1px 1px rgba(0,0,0,0.2)' }}
     >
       {initial}

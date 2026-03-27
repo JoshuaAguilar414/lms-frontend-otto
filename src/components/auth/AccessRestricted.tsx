@@ -5,10 +5,7 @@ export function AccessRestricted() {
   return (
     <div className="flex min-h-full flex-1 flex-col items-center justify-center bg-[#F6F7F9] px-4 py-12">
       <div className="w-full max-w-lg rounded-xl border border-gray-100 bg-white p-8 shadow-sm">
-        <h1
-          className="text-2xl font-bold sm:text-[1.6rem]"
-          style={{ color: '#00263d' }}
-        >
+        <h1 className="text-2xl font-bold text-brand sm:text-[1.6rem]">
           Access Restricted
         </h1>
         <h2

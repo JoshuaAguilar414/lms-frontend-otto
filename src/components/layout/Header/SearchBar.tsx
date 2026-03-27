@@ -1,28 +1,45 @@
 'use client';
 
-import { SearchIcon } from '@/components/icons';
-
 interface SearchBarProps {
   /** When true, always visible (e.g. inside mobile menu). Default: desktop-only. */
   inline?: boolean;
+  /** Passed to `data-project-search` (e.g. /de). */
+  projectSearch?: string;
 }
 
-export function SearchBar({ inline }: SearchBarProps) {
+/**
+ * searchBoxContainer → searchBoxElement → input.searchTerm + #searchSubmit (no form wrapper).
+ * Search icon 16×16px; bar width target 188px total (compact row).
+ */
+export function SearchBar({ inline, projectSearch = '' }: SearchBarProps) {
   return (
-    <div className={`font-poppins ${inline ? 'w-full' : 'hidden flex-1 max-w-xl mx-4 lg:block'}`}>
-      <div className="relative flex items-center overflow-hidden rounded-full border border-gray-200 bg-white">
-        <input
-          type="search"
-          placeholder="Search by regulation, topic, or risk"
-          className="w-full py-2.5 pl-4 pr-14 text-base font-normal text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-0 border-0"
+    <div
+      className={`searchBoxContainer font-sans w-[188px] max-w-full shrink-0 ${inline ? 'mx-auto' : ''}`}
+    >
+      <div
+        className="searchBoxElement flex items-end gap-1.5 border-b border-otto-burgundy"
+        role="search"
+      >
+        <span className="sr-only">Search</span>
+        <img
+          src="/search.svg"
+          alt=""
+          width={16}
+          height={16}
+          className="h-4 w-4 shrink-0 object-contain mb-1.5"
+          aria-hidden
         />
-        <button
-          type="button"
-          className="absolute right-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#d4edda] text-black transition-colors hover:bg-[#54bd01] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#54bd01] focus:ring-offset-2"
-          aria-label="Search"
-        >
-          <SearchIcon className="w-4 h-4" />
-        </button>
+        <input
+          type="text"
+          id="searchTermGlobal"
+          name="searchTerm"
+          className="searchTerm min-w-0 flex-1 border-0 bg-transparent py-1.5 text-sm text-otto-burgundy placeholder:text-otto-burgundy/45 focus:outline-none focus:ring-0"
+          placeholder=""
+          data-project-search={projectSearch}
+          data-suggest-path=""
+          defaultValue=""
+        />
+        
       </div>
     </div>
   );

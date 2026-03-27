@@ -11,6 +11,9 @@ interface AuthGuardProps {
 /**
  * Redirects to /restricted when the user is not signed in (no LMS token).
  * Use around protected page content (dashboard, My Courses, etc.).
+ *
+ * Frontend-only mode note:
+ * Keep backend integration intact, but bypass redirect for UI development.
  */
 export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
@@ -21,8 +24,11 @@ export function AuthGuard({ children }: AuthGuardProps) {
     if (token) {
       setAllowed(true);
     } else {
-      setAllowed(false);
-      router.replace('/restricted');
+      // Frontend-only bypass: show pages without backend auth.
+      // Re-enable protected-route behavior by switching to:
+      // setAllowed(false);
+      // router.replace('/restricted');
+      setAllowed(true);
     }
   }, [router]);
 

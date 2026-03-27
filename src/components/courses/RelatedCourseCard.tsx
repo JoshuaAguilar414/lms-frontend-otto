@@ -8,9 +8,9 @@ interface RelatedCourseCardProps {
 
 export function RelatedCourseCard({ course }: RelatedCourseCardProps) {
   return (
-    <article className="flex h-full min-w-[280px] max-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
+    <article className="flex h-full min-w-[280px] max-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-[#f8f8f8]">
       <div className="relative p-4 py-2">
-        <span className="inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+        <span className="inline-block rounded-full bg-otto-burgundy/10 px-2.5 py-0.5 text-xs font-medium text-otto-burgundy">
           {course.tag}
         </span>
       </div>
@@ -25,17 +25,17 @@ export function RelatedCourseCard({ course }: RelatedCourseCardProps) {
         />
       </div>
       <div className="flex flex-1 flex-col p-4 pt-3">
-        <h3 className="mb-2 line-clamp-2 text-base font-semibold text-gray-900">
+        <h3 className="mb-2 line-clamp-2 text-base font-semibold text-otto-burgundy">
           {course.title}
         </h3>
-        <p className="mb-4 line-clamp-2 flex-1 text-sm text-gray-500">
+        <p className="mb-4 line-clamp-2 flex-1 text-sm text-otto-burgundy/70">
           {course.description}
         </p>
         <div className="mt-auto flex items-center justify-between gap-2">
-          <span className="text-sm font-medium text-gray-900">{course.price}</span>
+          <span className="text-sm font-medium text-otto-burgundy">{course.price}</span>
           <Link
             href={course.href}
-            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+            className="inline-flex items-center rounded-full border border-otto-burgundy bg-white px-3 py-1.5 text-sm font-medium text-otto-burgundy shadow-sm transition-colors hover:bg-otto-burgundy hover:text-white"
           >
             View
           </Link>

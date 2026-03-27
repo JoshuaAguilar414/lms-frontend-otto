@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import { SiteLayout } from "@/components/layout";
 import "./globals.css";
 
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
-});
-
 export const metadata: Metadata = {
-  title: "VECTRA INTERNATIONAL | LMS Dashboard",
+  title: "Otto Group: LMS",
   description: "Enabling Positive Impact - Training & Learning Management",
   icons: {
-    icon: "https://marketplace.vectra-intl.com/cdn/shop/files/FAVICO-01.png?crop=center&height=32&v=1768200030&width=32",
+    icon: "https://static.ottogroup.com/wLayout22/wGlobal/layout/images/site-icons/favicon-32x32.png",
   },
 };
 
@@ -23,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={poppins.variable}>
-      <body className={`${poppins.className} antialiased`}>
+    <html lang="en">
+      <body className="font-sans antialiased">
         <SiteLayout>{children}</SiteLayout>
       </body>
     </html>

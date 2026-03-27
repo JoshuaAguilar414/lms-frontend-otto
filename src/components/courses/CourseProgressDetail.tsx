@@ -16,7 +16,7 @@ export function CourseProgressDetail({ course }: CourseProgressDetailProps) {
   const isCompleted = current >= total && total > 0;
 
   return (
-    <div className="rounded-lg bg-white p-6 shadow-md">
+    <div className="rounded-lg bg-[#f8f8f8] p-6 shadow-md">
       <h1 className="mb-2 text-2xl font-semibold text-gray-900">{course.title}</h1>
       <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
         <span>Progress</span>

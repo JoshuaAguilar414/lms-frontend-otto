@@ -4,9 +4,10 @@ import { Card } from '@/components/ui';
 import { ScormEmbed } from '@/components/embed/ScormEmbed';
 import { RelatedCoursesSlider } from '@/components/courses/RelatedCoursesSlider';
 import type { RelatedCourse } from '@/types';
+import { isMockModeEnabled, mockCourseCatalog } from '@/lib/mockData';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-const MARKETPLACE_BASE = 'https://marketplace.vectra-intl.com';
+const MARKETPLACE_BASE = 'https://www.ottogroup.com';
 
 function marketplaceProductUrl(handle: string): string {
   return `${MARKETPLACE_BASE}/products/${handle}`;
@@ -36,6 +37,10 @@ interface ApiCourse {
 }
 
 async function fetchCourse(id: string): Promise<ApiCourse | null> {
+  if (isMockModeEnabled) {
+    return mockCourseCatalog.find((course) => course._id === id) ?? null;
+  }
+
   try {
     const res = await fetch(`${API_BASE}/api/courses/${id}`, {
       next: { revalidate: 60 },
@@ -48,6 +53,10 @@ async function fetchCourse(id: string): Promise<ApiCourse | null> {
 }
 
 async function fetchCourses(): Promise<ApiCourse[]> {
+  if (isMockModeEnabled) {
+    return mockCourseCatalog;
+  }
+
   try {
     const res = await fetch(`${API_BASE}/api/courses`, {
       next: { revalidate: 60 },
@@ -94,10 +103,10 @@ export default async function CourseProgressPage({ params }: PageProps) {
 
   return (
     <AuthGuard>
-    <div className="bg-gray-100">
-      <div className="mx-auto max-w-screen-2xl px-4 py-3 sm:px-6 lg:px-8">
+    <div className="bg-[#ffffff]">
+      <div className="mx-auto max-w-full px-4 py-8 lg:px-[3.333rem]">
         {scormUrl ? (
-          <Card className="mt-4 p-0 overflow-hidden">
+          <Card className="mt-4 overflow-hidden bg-[#f8f8f8] p-0">
             <ScormEmbed
               src={scormUrl}
               title={course.title}
@@ -105,20 +114,20 @@ export default async function CourseProgressPage({ params }: PageProps) {
             />
           </Card>
         ) : (
-          <Card className="mt-8">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Course content</h2>
-            <div className="flex min-h-[320px] items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 text-gray-500">
+          <Card className="mt-8 bg-[#f8f8f8]">
+            <h2 className="mb-4 text-lg font-semibold text-otto-burgundy">Course content</h2>
+            <div className="flex min-h-[320px] items-center justify-center rounded-lg bg-[#f8f8f8] text-otto-burgundy/70">
               <p className="text-center text-sm">
                 No SCORM package URL configured for this course.
                 <br />
-                Set <code className="rounded bg-gray-200 px-1">scormUrl</code> or{' '}
-                <code className="rounded bg-gray-200 px-1">admissionId</code> on the course, or{' '}
-                <code className="rounded bg-gray-200 px-1">NEXT_PUBLIC_SCORM_SAMPLE_URL</code> in .env.
+                Set <code className="rounded bg-otto-burgundy/10 px-1 text-otto-burgundy">scormUrl</code> or{' '}
+                <code className="rounded bg-otto-burgundy/10 px-1 text-otto-burgundy">admissionId</code> on the course, or{' '}
+                <code className="rounded bg-otto-burgundy/10 px-1 text-otto-burgundy">NEXT_PUBLIC_SCORM_SAMPLE_URL</code> in .env.
               </p>
             </div>
           </Card>
         )}
-        <Card className="mt-4 mb-4 pb-8">
+        <Card className="mb-4 mt-4 bg-[#f8f8f8] pb-8">
           <RelatedCoursesSlider courses={relatedCourses} />
         </Card>
       </div>

@@ -196,19 +196,19 @@ export function MyPurchasesCard({
   const empty = !loading && !error && purchases.length === 0;
 
   return (
-    <Card className="overflow-hidden border border-gray-200 p-0">
-      <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+    <Card className="overflow-hidden bg-[#f8f8f8] p-0">
+      <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-2">
-          <BriefcaseIcon className="h-5 w-5 text-black" />
-          <h2 className="font-poppins text-xl font-bold text-[#00263d]">My Courses</h2>
+          <BriefcaseIcon className="h-5 w-5 text-otto-burgundy" />
+          <h2 className="font-sans text-xl font-bold text-otto-burgundy">My Products</h2>
         </div>
         {!noAuth && !empty && (
-          <span className="text-sm text-gray-500">Displaying {itemsPerPage} Items per Page</span>
+          <span className="text-sm text-otto-burgundy/70">Displaying {itemsPerPage} Items per Page</span>
         )}
       </div>
 
       {loading && (
-        <div className="px-6 py-12 text-center text-gray-500">Loading…</div>
+        <div className="px-6 py-12 text-center text-otto-burgundy/70">Loading…</div>
       )}
 
       {error && (
@@ -225,12 +225,12 @@ export function MyPurchasesCard({
       )}
 
       {noAuth && !loading && (
-        <div className="px-6 py-12 text-center text-gray-600">
+        <div className="px-6 py-12 text-center text-otto-burgundy/80">
           Sign in via Shopify to see your courses.
           <br />
           <a
             href={COMPANY_INFO.marketplaceUrl}
-            className="mt-2 inline-block text-[#54bd01] hover:underline"
+            className="mt-2 inline-block text-otto-burgundy hover:underline"
           >
             Go to Marketplace
           </a>
@@ -238,7 +238,7 @@ export function MyPurchasesCard({
       )}
 
       {!loading && !error && empty && !noAuth && (
-        <div className="px-6 py-12 text-center text-gray-500">No purchases yet.</div>
+        <div className="px-6 py-12 text-center text-otto-burgundy/70">No purchases yet.</div>
       )}
 
       {!loading && !error && purchases.length > 0 && (
@@ -246,21 +246,21 @@ export function MyPurchasesCard({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/50">
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                <tr className="bg-otto-burgundy/5">
+                  <th className="px-6 py-4 text-left text-sm font-medium text-otto-burgundy/80">
                     Course Name
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Cost</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Author</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-medium text-otto-burgundy/80">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-otto-burgundy/80">Cost</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-otto-burgundy/80">Author</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-otto-burgundy/80">
                     Course Detail
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedPurchases.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-100 last:border-b-0">
+                  <tr key={item.id} className="last:border-b-0">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="relative h-[50px] w-[50px] flex-shrink-0 overflow-hidden rounded bg-gray-100">
@@ -272,33 +272,33 @@ export function MyPurchasesCard({
                             sizes="50px"
                           />
                         </div>
-                        <span className="text-sm font-medium text-[#00263d]">{item.title}</span>
+                        <span className="text-sm font-medium text-otto-burgundy">{item.title}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex rounded-full bg-[#54bd01] px-3 py-1 text-xs font-medium text-white">
+                      <span className="inline-flex rounded-full bg-otto-burgundy px-3 py-1 text-xs font-medium text-white">
                         {item.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#00263d]">
+                    <td className="px-6 py-4 text-sm text-otto-burgundy">
                       {formatMoney(item.cost, item.currencyCode || userCurrency)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#00263d]">{item.author}</td>
+                    <td className="px-6 py-4 text-sm text-otto-burgundy">{item.author}</td>
                     <td className="px-6 py-4">
                       {item.productUrl?.startsWith('http') ? (
                         <a
                           href={item.productUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm font-medium text-[#54bd01] transition-colors hover:text-[#54bd01]/80"
+                          className="inline-flex items-center gap-1 text-sm font-medium text-otto-burgundy transition-colors hover:text-otto-burgundy/80"
                         >
                           View Details
                           <ArrowRightIcon className="h-4 w-4" />
                         </a>
                       ) : (
                         <Link
-                          href={item.productUrl ?? '/courses'}
-                          className="inline-flex items-center gap-1 text-sm font-medium text-[#54bd01] transition-colors hover:text-[#54bd01]/80"
+                          href={item.productUrl ?? '/products'}
+                          className="inline-flex items-center gap-1 text-sm font-medium text-otto-burgundy transition-colors hover:text-otto-burgundy/80"
                         >
                           View Details
                           <ArrowRightIcon className="h-4 w-4" />
@@ -310,12 +310,12 @@ export function MyPurchasesCard({
               </tbody>
             </table>
           </div>
-          <div className="flex items-center justify-center gap-2 border-t border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-center gap-2 px-6 py-4">
             <button
               type="button"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="rounded p-1 text-gray-400 transition-colors hover:text-gray-600 disabled:opacity-50"
+              className="rounded p-1 text-otto-burgundy/50 transition-colors hover:text-otto-burgundy disabled:opacity-50"
               aria-label="Previous page"
             >
               <ChevronLeftIcon className="h-5 w-5" />
@@ -328,8 +328,8 @@ export function MyPurchasesCard({
                   onClick={() => setCurrentPage(page)}
                   className={`flex h-9 w-9 items-center justify-center rounded text-sm font-medium transition-colors ${
                     page === currentPage
-                      ? 'bg-[#54bd01] text-white'
-                      : 'border border-gray-300 bg-white text-gray-800 hover:bg-gray-50'
+                      ? 'bg-otto-burgundy text-white'
+                      : 'bg-white text-otto-burgundy hover:bg-otto-burgundy/5'
                   }`}
                 >
                   {page}
@@ -340,7 +340,7 @@ export function MyPurchasesCard({
               type="button"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="rounded p-1 text-gray-400 transition-colors hover:text-gray-600 disabled:opacity-50"
+              className="rounded p-1 text-otto-burgundy/50 transition-colors hover:text-otto-burgundy disabled:opacity-50"
               aria-label="Next page"
             >
               <ChevronRightIcon className="h-5 w-5" />

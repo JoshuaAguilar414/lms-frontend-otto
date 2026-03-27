@@ -110,14 +110,14 @@ export function MyTrainingsCard({ trainings: trainingsProp = null }: MyTrainings
   const empty = !loading && !error && trainings.length === 0;
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col bg-[#f8f8f8]">
       <div className="mb-6 flex items-center gap-2">
-        <BookIcon className="h-5 w-5 text-black" />
-        <h2 className="font-poppins text-xl font-bold text-[#00263d]">My Progress</h2>
+        <BookIcon className="h-5 w-5 text-otto-burgundy" />
+        <h2 className="font-sans text-xl font-bold text-otto-burgundy">My Progress</h2>
       </div>
 
       {loading && (
-        <div className="py-8 text-center text-gray-500">Loading progress…</div>
+        <div className="py-8 text-center text-otto-burgundy/70">Loading progress…</div>
       )}
 
       {error && (
@@ -125,12 +125,12 @@ export function MyTrainingsCard({ trainings: trainingsProp = null }: MyTrainings
       )}
 
       {noAuth && !loading && (
-        <div className="px-6 py-12 text-center text-gray-600">
+        <div className="px-6 py-12 text-center text-otto-burgundy/80">
           Sign in via Shopify to see your progress.
           <br />
           <a
             href={COMPANY_INFO.marketplaceUrl}
-            className="mt-2 inline-block text-[#54bd01] hover:underline"
+            className="mt-2 inline-block text-otto-burgundy hover:underline"
           >
             Go to Marketplace
           </a>
@@ -138,7 +138,7 @@ export function MyTrainingsCard({ trainings: trainingsProp = null }: MyTrainings
       )}
 
       {!loading && !error && empty && !noAuth && (
-        <div className="py-8 text-center text-gray-500">No progress yet.</div>
+        <div className="py-8 text-center text-otto-burgundy/70">No progress yet.</div>
       )}
 
       {!loading && !error && trainings.length > 0 && (

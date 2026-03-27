@@ -12,7 +12,7 @@ export const COMPANY_INFO = {
   address: 'Chaussée de Wavre 1517B, B-1160 Brussels, Belgium',
   phone: '+32 262 06118',
   email: 'info@vectra-intl.com',
-  marketplaceUrl: 'https://marketplace.vectra-intl.com',
+  marketplaceUrl: 'https://www.ottogroup.com',
   /**
    * LMS frontend base URL (e.g. https://training.vectra-intl.com).
    * My Courses: Shopify links to {backend}/api/courses/user/{customerId}/{email};
@@ -37,10 +37,10 @@ export const COMPANY_INFO = {
   marketplaceOrderUrl: (orderId: string, shopId?: string | null) =>
     shopId
       ? `https://shopify.com/${shopId}/account/orders/${orderId}`
-      : `https://marketplace.vectra-intl.com/account/orders/${orderId}`,
+      : `https://www.ottogroup.com/account/orders/${orderId}`,
   /** Product page on marketplace (use Shopify product handle) */
   marketplaceProductUrl: (handle: string) =>
-    `https://marketplace.vectra-intl.com/products/${handle}`,
+    `https://www.ottogroup.com/products/${handle}`,
   websiteUrl: 'https://vectra-intl.com',
 } as const;
 
@@ -48,17 +48,17 @@ export const FOOTER_LINKS: FooterLinkGroup[] = [
   {
     title: 'Marketplace',
     links: [
-      { label: 'Home', href: 'https://marketplace.vectra-intl.com/' },
-      { label: 'Learning', href: 'https://marketplace.vectra-intl.com/collections/courses' },
-      { label: 'Tools', href: 'https://marketplace.vectra-intl.com/collections/assessments' },
-      { label: 'Consultancy', href: 'https://marketplace.vectra-intl.com/pages/consultancy' },
+      { label: 'Home', href: 'https://www.ottogroup.com/' },
+      { label: 'Learning', href: 'https://www.ottogroup.com/collections/courses' },
+      { label: 'Tools', href: 'https://www.ottogroup.com/collections/assessments' },
+      { label: 'Consultancy', href: 'https://www.ottogroup.com/pages/consultancy' },
     ],
   },
   {
     title: 'Quick Links',
     links: [
       { label: 'About Us', href: 'https://vectra-intl.com/about/' },
-      { label: 'Free Consultation', href: 'https://marketplace.vectra-intl.com/pages/consultancy' },
+      { label: 'Free Consultation', href: 'https://www.ottogroup.com/pages/consultancy' },
       { label: 'Ebooks', href: 'https://vectra-intl.com/ebook/' },
       { label: 'Events', href: 'https://vectra-intl.com/events/' },
       { label: 'Resources', href: 'https://vectra-intl.com/resources/' },

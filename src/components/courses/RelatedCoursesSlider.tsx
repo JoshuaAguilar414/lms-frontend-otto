@@ -56,7 +56,7 @@ export function RelatedCoursesSlider({ courses }: RelatedCoursesSliderProps) {
 
   return (
     <section className="rounded-xl p-0 pt-0">
-      <h2 className="mb-4 text-xl font-semibold text-gray-900">Related</h2>
+      <h2 className="mb-4 text-xl font-semibold text-otto-burgundy">Related</h2>
       <div className="relative">
         <div
           ref={scrollRef}
@@ -74,19 +74,19 @@ export function RelatedCoursesSlider({ courses }: RelatedCoursesSliderProps) {
               type="button"
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
-              className="absolute left-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-colors hover:bg-gray-50 disabled:opacity-40"
+              className="group absolute left-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-otto-burgundy bg-white shadow-md transition-colors hover:bg-otto-burgundy disabled:opacity-40"
               aria-label="Previous"
             >
-              <ChevronLeftIcon className="h-5 w-5 text-gray-700" />
+              <ChevronLeftIcon className="h-5 w-5 text-otto-burgundy transition-colors group-hover:text-white" />
             </button>
             <button
               type="button"
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
-              className="absolute right-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition-colors hover:bg-gray-50 disabled:opacity-40"
+              className="group absolute right-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-otto-burgundy bg-white shadow-md transition-colors hover:bg-otto-burgundy disabled:opacity-40"
               aria-label="Next"
             >
-              <ChevronRightIcon className="h-5 w-5 text-gray-700" />
+              <ChevronRightIcon className="h-5 w-5 text-otto-burgundy transition-colors group-hover:text-white" />
             </button>
           </>
         )}

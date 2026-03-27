@@ -1,14 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { ChevronDownIcon } from '@/components/icons';
 import { UserAvatar } from '@/components/ui';
-import { api, getStoredToken, setStoredToken } from '@/lib/api';
+import { api, setStoredToken } from '@/lib/api';
 import { SearchBar } from './SearchBar';
 import { COMPANY_INFO } from '@/lib/constants';
+import { OttoLogo } from './OttoLogo';
 
 const USER_DROPDOWN_FALLBACK = {
   name: 'User',
@@ -31,12 +30,15 @@ function CloseIcon({ className = 'w-6 h-6' }: { className?: string }) {
   );
 }
 
-type NavLink = { label: string; href: string; hasDropdown?: boolean; external?: boolean };
+const navLinkClass =
+  'text-sm font-normal text-otto-burgundy transition-opacity hover:opacity-70';
+const navLinkActiveClass = 'text-sm font-semibold text-otto-burgundy';
 
-const allNavLinks: NavLink[] = [
-  { label: 'Dashboard', href: '/' },
-  { label: 'My Courses', href: '/purchases' },
-];
+/** Desktop header nav — 16px, line-height 150% */
+const headerNavLinkClass =
+  'text-base font-semibold leading-[150%] text-otto-burgundy';
+const headerNavLinkActiveClass =
+  'text-base font-semibold leading-[150%] text-otto-burgundy';
 
 export function MainNav() {
   const pathname = usePathname();
@@ -47,14 +49,14 @@ export function MainNav() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [menuDropdownOpen, setMenuDropdownOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const menuDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setHasToken(!!getStoredToken());
+    setHasToken(true);
   }, []);
 
-  // Load real user profile from backend using current JWT.
-  // Backend resolves `userId` from the LMS JWT, which originates from Shopify login flow.
   useEffect(() => {
     if (!hasToken) return;
 
@@ -78,8 +80,6 @@ export function MainNav() {
   }, [hasToken]);
 
   async function redirectToShopifyAccount(destination: 'profile' | 'orders') {
-    // Always resolve Shopify destination at click-time.
-    // This avoids redirecting to internal fallback pages while `api.auth.me()` is still loading.
     try {
       const u = await api.auth.me();
       const shopifyShopIdResolved = u?.shopifyShopId ?? null;
@@ -94,10 +94,8 @@ export function MainNav() {
         return;
       }
 
-      // Last resort fallbacks.
-      window.location.href = destination === 'profile' ? '/profile-settings' : '/purchases';
+      window.location.href = destination === 'profile' ? '/profile-settings' : '/products';
     } catch {
-      // If the token is invalid/expired, the user will typically be redirected by other flows.
       window.location.href = '/';
     }
   }
@@ -115,244 +113,187 @@ export function MainNav() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+      const t = event.target as Node;
+      if (userMenuRef.current && !userMenuRef.current.contains(t)) {
         setUserMenuOpen(false);
       }
+      if (menuDropdownRef.current && !menuDropdownRef.current.contains(t)) {
+        setMenuDropdownOpen(false);
+      }
     }
-    if (userMenuOpen) {
+    if (userMenuOpen || menuDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [userMenuOpen]);
+  }, [userMenuOpen, menuDropdownOpen]);
+
+  const dashboardActive = pathname === '/';
+  const productsActive = pathname === '/products' || pathname.startsWith('/products/');
+  const ordersActive = pathname === '/orders' || pathname.startsWith('/orders/');
 
   if (isRestrictedPage) {
     return (
-      <nav className="font-poppins bg-white text-gray-900 border-b border-gray-200">
-        <div className="mx-auto flex h-16 items-center justify-start px-4 sm:px-6 md:px-8 lg:px-14">
-          <Link href="/" className="flex shrink-0 items-center gap-2">
-            <Image
-              src="/VECTRA LOGO SECONDARY.png"
-              alt="VECTRA INTERNATIONAL - Enabling Positive Impact"
-              width={200}
-              height={48}
-              className="h-10 w-auto object-contain"
-              priority
-            />
-          </Link>
+      <nav
+        id="blockHeaderMain"
+        className="font-sans w-full max-w-full bg-white px-6 shadow-[inset_0_-1px_0_0_#F00020] min-h-[80px] lg:h-[100px] lg:min-h-[100px] lg:px-[3.333rem]"
+      >
+        <div className="relative mx-auto flex h-full w-full max-w-full items-center">
+          <OttoLogo />
         </div>
       </nav>
     );
   }
 
   return (
-    <nav className="font-poppins bg-white text-gray-900 border-b border-gray-200">
-      <div className="mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6 md:px-8 lg:px-14">
-        <div className="flex min-w-0 flex-1 items-center gap-3 md:flex-initial md:gap-8">
+    <nav
+      id="blockHeaderMain"
+      className="relative font-sans w-full max-w-full bg-white px-6 shadow-[inset_0_-1px_0_0_#F00020] min-h-[80px] lg:h-[100px] lg:min-h-[100px] lg:px-[3.333rem]"
+    >
+      <div className="relative mx-auto flex h-full w-full max-w-full flex-col justify-center">
+        {/* Small screen: logo | search | hamburger (single row, reference layout) */}
+        <div className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3 lg:hidden">
+          <div className="min-w-0 shrink-0">
+            <OttoLogo />
+          </div>
+          <div className="flex min-w-0 justify-center px-1">
+            <SearchBar inline />
+          </div>
           <button
             type="button"
             onClick={() => setMobileMenuOpen((o) => !o)}
-            className="flex shrink-0 items-center justify-center p-2 text-gray-700 hover:text-[#54bd01] md:hidden"
+            className="flex shrink-0 items-center justify-center p-1 text-otto-burgundy hover:opacity-70"
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
           </button>
-          <Link href="/" className="flex shrink-0 items-center gap-2">
-            <Image
-              src="/VECTRA LOGO SECONDARY.png"
-              alt="VECTRA INTERNATIONAL - Enabling Positive Impact"
-              width={200}
-              height={48}
-              className="h-10 w-auto object-contain"
-              priority
-            />
-          </Link>
-          <div className="hidden md:flex items-center gap-6">
-            {(hasToken ? allNavLinks : allNavLinks.filter((l) => l.external)).map(({ label, href, hasDropdown, external }) => {
-              const isActive = !external && href !== '#' && (pathname === href || pathname.startsWith(href + '/'));
-              const linkClass = isActive
-                ? 'text-sm font-semibold text-[#54bd01]'
-                : 'text-sm text-gray-700 hover:text-[#54bd01] transition-colors';
-              return (
-                <Link
-                  key={label}
-                  href={href}
-                  className={`flex items-center gap-1 ${linkClass}`}
-                  {...(external && { target: '_blank', rel: 'noopener noreferrer' })}
-                >
-                  {label}
-                  {hasDropdown && <ChevronDownIcon className="w-4 h-4" />}
-                </Link>
-              );
-            })}
-          </div>
         </div>
 
-        <SearchBar />
+        {/* Desktop: logo | search | nav */}
+        <div className="hidden w-full items-center justify-between gap-8 lg:flex">
+          <div className="flex min-w-0 shrink-0 items-center lg:min-w-[11rem]">
+            <OttoLogo />
+          </div>
 
-        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
-          {hasToken ? (
-          <div className="relative" ref={userMenuRef}>
+          <div className="flex min-w-0 flex-1 justify-center px-2">
+            <SearchBar />
+          </div>
+
+          <div className="flex shrink-0 items-center gap-7">
+            <div id="navigationMain" className="flex items-center gap-7">
+              <div className={`navigationToggler inline-block ${dashboardActive ? 'navigation-toggler--active' : ''}`}>
+                <Link
+                  href="/"
+                  className={`navigationButton ${dashboardActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
+                >
+                  Dashboard
+                </Link>
+              </div>
+              <div className={`navigationToggler inline-block ${productsActive ? 'navigation-toggler--active' : ''}`}>
+                <Link
+                  href="/products"
+                  className={`navigationButton ${productsActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
+                >
+                  Products
+                </Link>
+              </div>
+              <div className={`navigationToggler inline-block ${ordersActive ? 'navigation-toggler--active' : ''}`}>
+                <Link
+                  href="/orders"
+                  className={`navigationButton ${ordersActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
+                >
+                  Orders
+                </Link>
+              </div>
+            </div>
+
             <button
               type="button"
-              onClick={() => setUserMenuOpen((o) => !o)}
-              className="flex items-center justify-center rounded-full transition-opacity hover:opacity-90"
-              aria-label="User menu"
-              aria-expanded={userMenuOpen}
-              aria-haspopup="true"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-otto-burgundy text-xs font-medium text-otto-burgundy transition-colors hover:bg-otto-burgundy hover:text-white"
+              aria-label="Language: English"
             >
-              <UserAvatar name={userName ?? USER_DROPDOWN_FALLBACK.name} size="sm" />
+              En
             </button>
-            {userMenuOpen && (
-              <div
-                className="absolute right-0 top-full z-50 mt-2 w-72 rounded-lg border border-gray-200 bg-white py-4 shadow-lg"
-                role="menu"
-              >
-                <div className="px-4 pb-3">
-                  <div className="flex flex-col items-center text-center">
-                    <UserAvatar
-                      name={userName ?? USER_DROPDOWN_FALLBACK.name}
-                      size="lg"
-                      className="mb-2"
-                    />
-                    <p className="text-sm font-semibold text-gray-900">
-                      {userName ?? USER_DROPDOWN_FALLBACK.name}
-                    </p>
-                    <p className="text-xs text-gray-500">{userEmail ?? USER_DROPDOWN_FALLBACK.email}</p>
-                  </div>
-                </div>
-                <div className="border-t border-gray-200" />
-                <div className="py-1">
-                  <button
-                    type="button"
-                    className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      redirectToShopifyAccount('profile');
-                    }}
-                  >
-                    My Profile
-                  </button>
-                  <button
-                    type="button"
-                    className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      redirectToShopifyAccount('orders');
-                    }}
-                  >
-                    My Orders
-                  </button>
-                  <button
-                    type="button"
-                    className="block w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    onClick={() => {
-                      setUserMenuOpen(false);
 
-                      // Redirect to Shopify logout so the customer session is cleared too.
-                      // Then we return to the marketplace homepage.
-                      (async () => {
-                        try {
-                          const u = await api.auth.me();
-                          const shopifyShopIdResolved = u?.shopifyShopId ?? null;
-                          const shopifyShopDomainResolved = u?.shopifyShopDomain ?? null;
-
-                          const currentUrl = new URL(window.location.href);
-                          const country = currentUrl.searchParams.get('country');
-                          const base = COMPANY_INFO.marketplaceUrl.replace(/\/$/, '');
-                          const returnUrl = country ? `${base}/?country=${encodeURIComponent(country)}` : base;
-
-                          const logoutUrl =
-                            shopifyShopIdResolved
-                              ? `https://shopify.com/${shopifyShopIdResolved}/account/logout?return_url=${encodeURIComponent(
-                                  returnUrl
-                                )}`
-                              : shopifyShopDomainResolved
-                                ? `https://${shopifyShopDomainResolved}/account/logout?return_url=${encodeURIComponent(
-                                    returnUrl
-                                  )}`
-                                : null;
-
-                          // Clear local LMS session immediately.
-                          setStoredToken(null);
-                          setHasToken(false);
-                          setUserName(null);
-                          setUserEmail(null);
-
-                          if (logoutUrl) {
-                            window.location.href = logoutUrl;
-                            return;
-                          }
-
-                          router.replace('/');
-                        } catch {
-                          // If the user/session can't be resolved, just do a local logout.
-                          setStoredToken(null);
-                          setHasToken(false);
-                          setUserName(null);
-                          setUserEmail(null);
-                          router.replace('/');
-                        }
-                      })();
-                    }}
-                  >
-                    Sign out
-                  </button>
-                </div>
-              </div>
-            )}
+            {/* User avatar/menu temporarily hidden per current requirement. */}
           </div>
-          ) : (
-            <Link
-              href={COMPANY_INFO.marketplaceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
-              style={{ backgroundColor: '#54bd01' }}
-            >
-              Sign in
-            </Link>
-          )}
         </div>
       </div>
 
-      {/* Mobile menu: categories + search bar */}
+      {/* Mobile sheet */}
       <div
-        className={`overflow-hidden transition-[visibility] duration-200 md:hidden ${mobileMenuOpen ? 'visible' : 'invisible'}`}
+        className={`absolute right-4 top-full z-40 w-[min(17rem,calc(100vw-2rem))] transition-[visibility,opacity,transform] duration-200 lg:hidden ${
+          mobileMenuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'
+        }`}
       >
         <div
-          className={`grid transition-[grid-template-rows] duration-200 ease-out ${mobileMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+          className={`grid transition-[grid-template-rows] duration-200 ease-out ${
+            mobileMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+          }`}
         >
-          <div className="overflow-hidden border-t border-gray-200 bg-white">
-            <div className="space-y-4 px-4 py-4 pb-6">
-              <div className="w-full">
-                <SearchBar inline />
-              </div>
-              <ul className="space-y-1">
-                {(hasToken ? allNavLinks : allNavLinks.filter((l) => l.external)).map(({ label, href, hasDropdown, external }) => {
-                  const isActive = !external && href !== '#' && (pathname === href || pathname.startsWith(href + '/'));
-                  const linkClass = isActive
-                    ? 'font-semibold text-[#54bd01]'
-                    : 'font-medium text-gray-700 hover:text-[#54bd01]';
-                  return (
-                    <li key={label}>
-                      <Link
-                        href={href}
-                        className={`flex items-center gap-1 py-3 text-sm ${linkClass}`}
-                        onClick={() => setMobileMenuOpen(false)}
-                        {...(external && { target: '_blank', rel: 'noopener noreferrer' })}
-                      >
-                        {label}
-                        {hasDropdown && <ChevronDownIcon className="w-4 h-4" />}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+          <div className="overflow-hidden rounded-lg border border-otto-burgundy/20 bg-white shadow-lg">
+            <ul className="space-y-0 px-3 py-2">
+              <li>
+                <Link
+                  href="/"
+                  className={`block py-2 text-sm ${dashboardActive ? navLinkActiveClass : navLinkClass}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                    href="/products"
+                  className={`block py-2 text-sm ${
+                    pathname === '/products' || pathname.startsWith('/products/')
+                      ? navLinkActiveClass
+                      : navLinkClass
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Products
+                </Link>
+              </li>
+              <li>
+                <Link
+                    href="/orders"
+                  className={`block py-2 text-sm ${
+                    pathname === '/orders' || pathname.startsWith('/orders/')
+                      ? navLinkActiveClass
+                      : navLinkClass
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Orders
+                </Link>
+              </li>
+              {hasToken ? (
+                <>
+                  <li className="border-t border-otto-burgundy/15 pt-2 mt-2">
+                    <button
+                      type="button"
+                      className={`block w-full py-2 text-left text-sm ${navLinkClass}`}
+                      aria-label="Language: English"
+                    >
+                      En
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li className="border-t border-otto-burgundy/15 pt-2 mt-2">
+                  <Link
+                    href={COMPANY_INFO.marketplaceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block py-2 text-sm ${navLinkClass}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign in
+                  </Link>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
       </div>
