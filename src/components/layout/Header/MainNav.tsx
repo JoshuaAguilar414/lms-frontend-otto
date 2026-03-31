@@ -127,9 +127,8 @@ export function MainNav() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [userMenuOpen, menuDropdownOpen]);
 
-  const dashboardActive = pathname === '/';
-  const productsActive = pathname === '/products' || pathname.startsWith('/products/');
-  const ordersActive = pathname === '/orders' || pathname.startsWith('/orders/');
+  const coursesActive =
+    pathname === '/' || pathname === '/courses' || pathname.startsWith('/courses/');
   const adminActive = pathname === '/admin' || pathname.startsWith('/admin/');
 
   if (isRestrictedPage) {
@@ -182,28 +181,12 @@ export function MainNav() {
 
           <div className="flex shrink-0 items-center gap-7">
             <div id="navigationMain" className="flex items-center gap-7">
-              <div className={`navigationToggler inline-block ${dashboardActive ? 'navigation-toggler--active' : ''}`}>
+              <div className={`navigationToggler inline-block ${coursesActive ? 'navigation-toggler--active' : ''}`}>
                 <Link
-                  href="/"
-                  className={`navigationButton ${dashboardActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
+                  href="/courses"
+                  className={`navigationButton ${coursesActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
                 >
-                  Dashboard
-                </Link>
-              </div>
-              <div className={`navigationToggler inline-block ${productsActive ? 'navigation-toggler--active' : ''}`}>
-                <Link
-                  href="/products"
-                  className={`navigationButton ${productsActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
-                >
-                  Products
-                </Link>
-              </div>
-              <div className={`navigationToggler inline-block ${ordersActive ? 'navigation-toggler--active' : ''}`}>
-                <Link
-                  href="/orders"
-                  className={`navigationButton ${ordersActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
-                >
-                  Orders
+                  Courses
                 </Link>
               </div>
               <div className={`navigationToggler inline-block ${adminActive ? 'navigation-toggler--active' : ''}`}>
@@ -244,37 +227,15 @@ export function MainNav() {
             <ul className="space-y-0 px-3 py-2">
               <li>
                 <Link
-                  href="/"
-                  className={`block py-2 text-sm ${dashboardActive ? navLinkActiveClass : navLinkClass}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link
-                    href="/products"
+                  href="/courses"
                   className={`block py-2 text-sm ${
-                    pathname === '/products' || pathname.startsWith('/products/')
+                    pathname === '/' || pathname === '/courses' || pathname.startsWith('/courses/')
                       ? navLinkActiveClass
                       : navLinkClass
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Products
-                </Link>
-              </li>
-              <li>
-                <Link
-                    href="/orders"
-                  className={`block py-2 text-sm ${
-                    pathname === '/orders' || pathname.startsWith('/orders/')
-                      ? navLinkActiveClass
-                      : navLinkClass
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Orders
+                  Courses
                 </Link>
               </li>
               <li>

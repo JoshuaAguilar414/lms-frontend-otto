@@ -136,31 +136,51 @@ export const api = {
     list: () => request<CourseResponse[]>('/api/courses'),
   },
   admin: {
-    uploadScorm: (payload: { productId: string; title: string; file: File }) => {
+    uploadScorm: async (payload: {
+      productId: string;
+      title: string;
+      tag: string;
+      description: string;
+      image: File;
+      file: File;
+    }) => {
       const formData = new FormData();
       formData.append('productId', payload.productId);
       formData.append('title', payload.title);
+      formData.append('tag', payload.tag);
+      formData.append('description', payload.description);
+      formData.append('image', payload.image);
       formData.append('file', payload.file);
-      return request<{ message?: string; scormUrl?: string; [key: string]: unknown }>(
-        '/api/admin/scorm/upload',
-        {
-          method: 'POST',
-          body: formData,
-          token: getStoredToken(),
-        }
-      );
+      const res = await fetch('/api/admin/scorm/upload', {
+        method: 'POST',
+        body: formData,
+        headers: getStoredToken() ? { Authorization: `Bearer ${getStoredToken()}` } : undefined,
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        message?: string;
+        scormUrl?: string;
+        error?: string;
+        [key: string]: unknown;
+      };
+      if (!res.ok) throw new Error(data.error || data.message || 'Upload failed');
+      return data;
     },
-    uploadLogo: (logo: File) => {
+    uploadLogo: async (logo: File) => {
       const formData = new FormData();
       formData.append('logo', logo);
-      return request<{ message?: string; logoUrl?: string; [key: string]: unknown }>(
-        '/api/admin/logo/upload',
-        {
-          method: 'POST',
-          body: formData,
-          token: getStoredToken(),
-        }
-      );
+      const res = await fetch('/api/admin/logo/upload', {
+        method: 'POST',
+        body: formData,
+        headers: getStoredToken() ? { Authorization: `Bearer ${getStoredToken()}` } : undefined,
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        message?: string;
+        logoUrl?: string;
+        error?: string;
+        [key: string]: unknown;
+      };
+      if (!res.ok) throw new Error(data.error || data.message || 'Upload failed');
+      return data;
     },
   },
 };

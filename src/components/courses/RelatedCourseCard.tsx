@@ -8,7 +8,7 @@ interface RelatedCourseCardProps {
 
 export function RelatedCourseCard({ course }: RelatedCourseCardProps) {
   return (
-    <article className="flex h-full min-w-[280px] max-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-[#f8f8f8]">
+    <article className="flex h-full min-w-[280px] max-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white">
       <div className="relative p-4 py-2">
         <span className="inline-block rounded-full bg-otto-burgundy/10 px-2.5 py-0.5 text-xs font-medium text-otto-burgundy">
           {course.tag}

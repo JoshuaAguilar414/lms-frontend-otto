@@ -5,6 +5,7 @@ import { ScormEmbed } from '@/components/embed/ScormEmbed';
 import { RelatedCoursesSlider } from '@/components/courses/RelatedCoursesSlider';
 import type { RelatedCourse } from '@/types';
 import { isMockModeEnabled, mockCourseCatalog } from '@/lib/mockData';
+import { getUploadedCourseById, getUploadedCourses } from '@/lib/adminStorage';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const MARKETPLACE_BASE = 'https://www.ottogroup.com';
@@ -28,6 +29,7 @@ function buildScormUrl(course: {
 interface ApiCourse {
   _id: string;
   title: string;
+  tag?: string;
   description?: string;
   thumbnail?: string;
   handle?: string;
@@ -37,6 +39,8 @@ interface ApiCourse {
 }
 
 async function fetchCourse(id: string): Promise<ApiCourse | null> {
+  const uploaded = await getUploadedCourseById(id);
+  if (uploaded) return uploaded;
   if (isMockModeEnabled) {
     return mockCourseCatalog.find((course) => course._id === id) ?? null;
   }
@@ -53,6 +57,8 @@ async function fetchCourse(id: string): Promise<ApiCourse | null> {
 }
 
 async function fetchCourses(): Promise<ApiCourse[]> {
+  const uploadedCourses = await getUploadedCourses();
+  if (uploadedCourses.length > 0) return uploadedCourses;
   if (isMockModeEnabled) {
     return mockCourseCatalog;
   }
@@ -74,7 +80,7 @@ function toRelatedCourse(c: ApiCourse): RelatedCourse {
     title: c.title,
     description: c.description ?? '',
     thumbnail: c.thumbnail ?? 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=250&fit=crop',
-    tag: 'Course',
+    tag: c.tag || 'Course',
     price: '',
     href: c.handle ? marketplaceProductUrl(c.handle) : `/courses/${c._id}`,
   };
