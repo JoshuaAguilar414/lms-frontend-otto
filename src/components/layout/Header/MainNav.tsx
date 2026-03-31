@@ -130,6 +130,7 @@ export function MainNav() {
   const dashboardActive = pathname === '/';
   const productsActive = pathname === '/products' || pathname.startsWith('/products/');
   const ordersActive = pathname === '/orders' || pathname.startsWith('/orders/');
+  const adminActive = pathname === '/admin' || pathname.startsWith('/admin/');
 
   if (isRestrictedPage) {
     return (
@@ -205,6 +206,14 @@ export function MainNav() {
                   Orders
                 </Link>
               </div>
+              <div className={`navigationToggler inline-block ${adminActive ? 'navigation-toggler--active' : ''}`}>
+                <Link
+                  href="/admin"
+                  className={`navigationButton ${adminActive ? headerNavLinkActiveClass : headerNavLinkClass}`}
+                >
+                  Admin
+                </Link>
+              </div>
             </div>
 
             <button
@@ -266,6 +275,19 @@ export function MainNav() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Orders
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin"
+                  className={`block py-2 text-sm ${
+                    pathname === '/admin' || pathname.startsWith('/admin/')
+                      ? navLinkActiveClass
+                      : navLinkClass
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Admin
                 </Link>
               </li>
               {hasToken ? (

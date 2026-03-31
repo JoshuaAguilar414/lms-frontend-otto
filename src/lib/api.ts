@@ -37,8 +37,9 @@ async function request<T>(
       ? rawPath.slice('/api'.length)
       : rawPath;
   const url = `${baseUrl}${effectivePath}`;
+  const isFormDataBody = typeof FormData !== 'undefined' && init.body instanceof FormData;
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
+    ...(isFormDataBody ? {} : { 'Content-Type': 'application/json' }),
     ...(init.headers as Record<string, string>),
   };
   if (token) (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
@@ -133,6 +134,34 @@ export const api = {
   courses: {
     /** List courses (synced from Shopify products). No auth required. */
     list: () => request<CourseResponse[]>('/api/courses'),
+  },
+  admin: {
+    uploadScorm: (payload: { productId: string; title: string; file: File }) => {
+      const formData = new FormData();
+      formData.append('productId', payload.productId);
+      formData.append('title', payload.title);
+      formData.append('file', payload.file);
+      return request<{ message?: string; scormUrl?: string; [key: string]: unknown }>(
+        '/api/admin/scorm/upload',
+        {
+          method: 'POST',
+          body: formData,
+          token: getStoredToken(),
+        }
+      );
+    },
+    uploadLogo: (logo: File) => {
+      const formData = new FormData();
+      formData.append('logo', logo);
+      return request<{ message?: string; logoUrl?: string; [key: string]: unknown }>(
+        '/api/admin/logo/upload',
+        {
+          method: 'POST',
+          body: formData,
+          token: getStoredToken(),
+        }
+      );
+    },
   },
 };
 
