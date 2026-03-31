@@ -182,6 +182,15 @@ export const api = {
       if (!res.ok) throw new Error(data.error || data.message || 'Upload failed');
       return data;
     },
+    updateCourse: (courseId: string, payload: { title: string; tag: string; description: string }) =>
+      request<{ message?: string; course?: CourseResponse }>(`/api/admin/courses/${courseId}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      }),
+    deleteCourse: (courseId: string) =>
+      request<{ message?: string }>(`/api/admin/courses/${courseId}`, {
+        method: 'DELETE',
+      }),
   },
 };
 
@@ -355,6 +364,7 @@ export interface CourseResponse {
   _id: string;
   shopifyProductId?: string;
   title: string;
+  tag?: string;
   productType?: string;
   description?: string;
   tags?: string[];

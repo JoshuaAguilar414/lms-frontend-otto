@@ -240,3 +240,58 @@ export async function getCurrentLogoUrl(): Promise<string | null> {
   const data = await readAdminData();
   return data.logoUrl;
 }
+
+export async function updateUploadedCourse(
+  id: string,
+  updates: { title: string; tag: string; description: string }
+): Promise<UploadedCourse> {
+  const data = await readAdminData();
+  const index = data.courses.findIndex((course) => course._id === id);
+  if (index < 0) {
+    throw new Error('Course not found.');
+  }
+
+  const existing = data.courses[index];
+  const nextCourse: UploadedCourse = {
+    ...existing,
+    title: updates.title.trim(),
+    tag: updates.tag.trim(),
+    description: updates.description.trim(),
+  };
+  data.courses[index] = nextCourse;
+  await writeAdminData(data);
+  return nextCourse;
+}
+
+export async function deleteUploadedCourse(id: string): Promise<void> {
+  const data = await readAdminData();
+  const index = data.courses.findIndex((course) => course._id === id);
+  if (index < 0) {
+    throw new Error('Course not found.');
+  }
+
+  const course = data.courses[index];
+
+  if (course.scormUrl?.startsWith('/uploads/scorm/')) {
+    const relativePath = course.scormUrl.replace('/uploads/scorm/', '');
+    const scormRoot = relativePath.split('/')[0];
+    if (scormRoot) {
+      await rm(path.join(SCORM_UPLOADS_DIR, scormRoot), {
+        recursive: true,
+        force: true,
+      }).catch(() => undefined);
+    }
+  }
+
+  if (course.thumbnail?.startsWith('/uploads/course-images/')) {
+    const imageName = course.thumbnail.replace('/uploads/course-images/', '');
+    if (imageName) {
+      await rm(path.join(COURSE_IMAGE_UPLOADS_DIR, imageName), {
+        force: true,
+      }).catch(() => undefined);
+    }
+  }
+
+  data.courses.splice(index, 1);
+  await writeAdminData(data);
+}
